@@ -5,5 +5,7 @@
 return [
     // 指令定义
     'commands' => [
+        'admin:today_count' => \app\command\TodayCount::class,
+        'admin:shou_yi' => \app\command\ShouYi::class,
     ],
 ];

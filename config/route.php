@@ -48,4 +48,6 @@ return [
     'request_cache_except'  => [],
     // 请求缓存的Tag
     'request_cache_tag'     => '',    
+    // ✅ 自动加载路由文件目录（必须手动添加这一行）
+    // 'route_file'            => ['app'],
 ];

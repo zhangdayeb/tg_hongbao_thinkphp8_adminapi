@@ -3,6 +3,8 @@ declare (strict_types = 1);
 
 namespace app;
 
+use app\common\google\GoogleAuth;
+use app\common\traites\ApiResponseTrait;
 use think\App;
 use think\exception\ValidateException;
 use think\Validate;
@@ -12,6 +14,7 @@ use think\Validate;
  */
 abstract class BaseController
 {
+    use ApiResponseTrait;
     /**
      * Request实例
      * @var \think\Request
@@ -45,14 +48,15 @@ abstract class BaseController
     {
         $this->app     = $app;
         $this->request = $this->app->request;
-
         // 控制器初始化
         $this->initialize();
     }
 
     // 初始化
     protected function initialize()
-    {}
+    {
+        $this->crossDomain();
+    }
 
     /**
      * 验证数据
@@ -64,7 +68,7 @@ abstract class BaseController
      * @return array|string|true
      * @throws ValidateException
      */
-    protected function validate(array $data, string|array $validate, array $message = [], bool $batch = false)
+    protected function validate(array $data, $validate, array $message = [], bool $batch = false)
     {
         if (is_array($validate)) {
             $v = new Validate();
@@ -90,5 +94,18 @@ abstract class BaseController
 
         return $v->failException(true)->check($data);
     }
+    /**
+     * /验证验证码是否正确
+     * @param $code //验证码
+     * @param $invitation_code //用户 invitation_code
+     */
+    public static function goods_code($code,$invitation_code)
+    {
+        return (new GoogleAuth())->model()->google_verify_code($invitation_code,$code);
+    }
 
+    public function __call($name,$arguments)
+    {
+        return show([],-1,"找不到{$name}方法",404);
+    }
 }

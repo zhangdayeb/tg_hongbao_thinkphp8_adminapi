@@ -26,17 +26,17 @@ return [
             // 服务器地址
             'hostname'        => env('DB_HOST', '127.0.0.1'),
             // 数据库名
-            'database'        => env('DB_NAME', ''),
+            'database'        => env('DB_NAME', 'ntp_im'),
             // 用户名
             'username'        => env('DB_USER', 'root'),
             // 密码
-            'password'        => env('DB_PASS', ''),
+            'password'        => env('DB_PASS', 'b2e1db04ca5c1c5a'),
             // 端口
             'hostport'        => env('DB_PORT', '3306'),
             // 数据库连接参数
             'params'          => [],
-            // 数据库编码
-            'charset'         => env('DB_CHARSET', 'utf8mb4'),
+            // 数据库编码默认采用utf8
+            'charset'         => env('DB_CHARSET', 'utf8'),
             // 数据库表前缀
             'prefix'          => env('DB_PREFIX', 'ntp_'),
 
