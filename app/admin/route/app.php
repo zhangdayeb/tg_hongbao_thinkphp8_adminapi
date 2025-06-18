@@ -178,17 +178,17 @@ Route::rule('api/notification/trigger$', 'log.TongZhi/triggerNotification');    
 // ====================
 // Telegram群组管理
 // ====================
-Route::rule('telegram/group/list$', 'telegram.TGTelegram/index');              // Telegram群组列表
-Route::rule('telegram/group/detail$', 'telegram.TGTelegram/detail');           // Telegram群组详情
-Route::rule('telegram/group/add$', 'telegram.TGTelegram/add');                 // 添加Telegram群组
-Route::rule('telegram/group/edit$', 'telegram.TGTelegram/edit');               // 编辑Telegram群组
-Route::rule('telegram/group/delete$', 'telegram.TGTelegram/delete');           // 删除Telegram群组
-Route::rule('telegram/group/batch_delete$', 'telegram.TGTelegram/batchDelete'); // 批量删除Telegram群组
-Route::rule('telegram/group/change_status$', 'telegram.TGTelegram/changeStatus'); // 修改群组状态
-Route::rule('telegram/group/change_broadcast$', 'telegram.TGTelegram/changeBroadcast'); // 修改广播状态
-Route::rule('telegram/group/statistics$', 'telegram.TGTelegram/statistics');   // Telegram群组统计
-Route::rule('telegram/group/activity_ranking$', 'telegram.TGTelegram/activityRanking'); // 群组活跃度排行
-Route::rule('telegram/group/export$', 'telegram.TGTelegram/export');           // 导出群组列表
+Route::rule('telegram/group/list$', 'telegram.TGQunZu/index');              // Telegram群组列表
+Route::rule('telegram/group/detail$', 'telegram.TGQunZu/detail');           // Telegram群组详情
+Route::rule('telegram/group/add$', 'telegram.TGQunZu/add');                 // 添加Telegram群组
+Route::rule('telegram/group/edit$', 'telegram.TGQunZu/edit');               // 编辑Telegram群组
+Route::rule('telegram/group/delete$', 'telegram.TGQunZu/delete');           // 删除Telegram群组
+Route::rule('telegram/group/batch_delete$', 'telegram.TGQunZu/batchDelete'); // 批量删除Telegram群组
+Route::rule('telegram/group/change_status$', 'telegram.TGQunZu/changeStatus'); // 修改群组状态
+Route::rule('telegram/group/change_broadcast$', 'telegram.TGQunZu/changeBroadcast'); // 修改广播状态
+Route::rule('telegram/group/statistics$', 'telegram.TGQunZu/statistics');   // Telegram群组统计
+Route::rule('telegram/group/activity_ranking$', 'telegram.TGQunZu/activityRanking'); // 群组活跃度排行
+Route::rule('telegram/group/export$', 'telegram.TGQunZu/export');           // 导出群组列表
 
 // ====================
 // Telegram红包管理

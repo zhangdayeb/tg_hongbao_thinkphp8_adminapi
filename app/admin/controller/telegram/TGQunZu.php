@@ -11,7 +11,7 @@ use think\exception\ValidateException;
 /**
  * Telegram群组管理控制器
  */
-class TGTelegram extends Base
+class TGQunZu extends Base
 {
     protected $model;
     use PublicCrudTrait;
