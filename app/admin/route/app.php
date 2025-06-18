@@ -59,11 +59,9 @@ Route::rule('auth/action$', 'auth.BranchAuth/action_list');    // 控制器列�
 Route::rule('auth/action_edit$', 'auth.BranchAuth/action_edit'); // 控制器修改
 Route::rule('auth/menu$', 'auth.BranchAuth/menu_list');        // 菜单列表
 Route::rule('auth/menu_edit$', 'auth.BranchAuth/menu_edit');   // 菜单修改
-
 Route::rule('role_menu/list$', 'auth.RoleMenu/index');         // 角色菜单列表分组
 Route::rule('role_menu/add$', 'auth.RoleMenu/add');            // 角色菜单添加
 Route::rule('role_menu/edit$', 'auth.RoleMenu/edit');          // 角色菜单修改
-
 Route::rule('power/list$', 'auth.RolePower/index');            // 角色API接口列表
 Route::rule('power/add$', 'auth.RolePower/add');               // 角色API接口添加
 Route::rule('power/edit$', 'auth.RolePower/edit');             // 角色API接口修改
