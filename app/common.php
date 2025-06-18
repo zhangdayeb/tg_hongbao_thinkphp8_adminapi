@@ -798,8 +798,13 @@ function userzm($length, $needAlpha = true)
     }
 
     function getRealNameText($is_real_name){
-        $data = ['0'=>'未申请','1'=>'已实名','2'=>'申请中'];
-        return $data[$is_real_name];
+        if(is_numeric($is_real_name)){
+            $data = ['0'=>'未申请','1'=>'已实名','2'=>'申请中'];
+            return $data[$is_real_name];
+        }else{
+            return '未知';
+        }
+        
     }
 
 
@@ -1030,7 +1035,19 @@ if (! function_exists('check_domain_accessible')) {
 
 }
 
-
+function array_merge_func($array1,$array2)
+{
+    if (!empty($array1) && !empty($array2)){
+      return   array_merge($array1,$array2);
+    }
+    if (!empty($array1)){
+        return   $array1;
+    }
+    if (!empty($array2)){
+        return   $array2;
+    }
+    return [];
+}
 
 
 

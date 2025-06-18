@@ -67,10 +67,8 @@ class MoneyLog extends Model
         return self::alias('a')
             ->where($where)
             ->where($map)
-//            ->join('common_user b', 'a.uid = b.id','left')
-            ->join('common_admin c', 'a.agent_uid = c.id','left')
+            // ->join('common_admin c', 'a.agent_uid = c.id','left')
             ->join('video b', 'a.video = b.id','left')
-//            ->field('a.*,b.user_name,c.user_name admin_name')
             ->field($fields)
             ->order($order)
             ->paginate(['list_rows' => $limit, 'page' => $page], false)->each(function ($item) {

@@ -6,7 +6,6 @@ namespace app\admin\controller\log;
 
 use app\admin\controller\Base;
 use app\common\model\LoginLog as models;
-use think\facade\Db;
 
 class LoginLog extends Base
 {
@@ -31,26 +30,10 @@ class LoginLog extends Base
         //每页显示数量
         $limit = $this->request->post('limit', 10);
         //查询搜索条件
-        //没办法区分type
-        $list =$this->model->order('id desc')
-            ->paginate(['list_rows'=>$limit,'page'=>$page])
-            ->each(function($item, $key){
-                $item->address = '';
-                if (!empty($item->login_ip)){
-                    $int = ip2long($item->login_ip);
-                    //查询范围区间
-                    $find = Db::name('common_data_ip')
-                        ->cache(60)
-                        ->where('num_start','<',$int)
-                        ->where('num_end','>',$int)
-                        ->find();
-                    if ($find){
-                        $item->address = $find['country'].$find['region'].$find['city'].$find['area'];
-                    }
-                }
-                return $item;
-            });;
 
-         $this->success($list);
+        //没办法区分type
+        $list =$this->model->order('id desc')->paginate(['list_rows'=>$limit,'page'=>$page]);;
+
+        return $this->success($list);
     }
 }

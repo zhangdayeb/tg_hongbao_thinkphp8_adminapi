@@ -35,9 +35,9 @@ class PayRecharge extends Model
         return self::alias('a')
             ->where($where)
             ->where($map)
-            ->join('common_user b', 'a.uid = b.id', 'left')
+            ->join('common_user b', 'a.user_id = b.id', 'left')
             ->join('common_admin c', 'a.admin_uid = c.id', 'left')
-            ->join('common_admin d', 'a.market_uid = d.id', 'left')
+            // ->join('common_admin d', 'a.market_uid = d.id', 'left')
             ->field('a.*,b.user_name,c.user_name as admin_name,d.user_name as market_name')
             ->order('id desc')
             ->paginate(['list_rows' => $limit, 'page' => $page], false);

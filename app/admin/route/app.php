@@ -31,6 +31,24 @@ Route::rule('admin/detail$', '/user.Admins/detail'); // 管理员信息查看
 Route::rule('admin/del$', '/user.Admins/del');       // 删除后台管理员
 
 // ====================
+// 市场部等级管理
+// ====================
+Route::rule('market_level/list$', 'market.MarketLevel/index');       // 市场部等级列表
+Route::rule('market_level/add$', 'market.MarketLevel/add');          // 市场部等级添加
+Route::rule('market_level/edit$', 'market.MarketLevel/edit');        // 市场部等级修改
+Route::rule('market_level/del$', 'market.MarketLevel/del');          // 市场部等级删除
+Route::rule('market_level/detail$', 'market.MarketLevel/detail');    // 市场部等级详情
+
+// ====================
+// 市场部关系管理
+// ====================
+Route::rule('market_relation/list$', 'market.MarketRelation/index'); // 市场部关系列表
+Route::rule('market_relation/add$', 'market.MarketRelation/add');    // 市场部关系添加
+Route::rule('market_relation/edit$', 'market.MarketRelation/edit');  // 市场部关系修改
+Route::rule('market_relation/del$', 'market.MarketRelation/del');    // 市场部关系删除
+Route::rule('market_relation/detail$', 'market.MarketRelation/detail'); // 市场部关系详情
+
+// ====================
 // 菜单管理相关路由
 // ====================
 Route::rule('menu/list$', 'auth.Menu/index');                  // 后台菜单列表

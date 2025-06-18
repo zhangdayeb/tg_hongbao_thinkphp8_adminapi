@@ -30,8 +30,10 @@ class AdminLog extends Base
         //每页显示数量
         $limit = $this->request->post('limit', 10);
         //查询搜索条件
+
         //没办法区分type
         $list =$this->model->order('id desc')->paginate(['list_rows'=>$limit,'page'=>$page]);;
-         $this->success($list);
+
+        return $this->success($list);
     }
 }
