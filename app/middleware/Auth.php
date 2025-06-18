@@ -30,7 +30,7 @@ class Auth
 
         //校验是否过期的token
         $expiration_time = time() - strtotime($res['create_time']);
-        if ($expiration_time >= env('token.token_time', 10)) return $this->failed('token过期');
+        // if ($expiration_time >= env('token.token_time', 10)) return $this->failed('token过期');
         // config('ToConfig.admin_agent.admin_agent') 代理商 类型
         switch ($map['type']) {
             case 1:
