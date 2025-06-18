@@ -1,8 +1,8 @@
 <?php
 
-namespace app\controller\log;
+namespace app\admin\controller\log;
 
-use app\controller\Base;
+use app\admin\controller\Base;
 use think\facade\Db;
 use think\facade\Log;
 use think\Exception;

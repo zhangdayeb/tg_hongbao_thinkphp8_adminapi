@@ -92,13 +92,6 @@ Route::rule('pay/refuse$', 'log.PayWithdraw/refuse');          // 提现拒绝
 Route::rule('pay/is_line$', 'log.PayWithdraw/is_line');        // 线上线下
 Route::rule('pay/amount$', 'log.PayWithdraw/amount_edit');     // 修改金额
 
-// ====================================================================
-// 提现管理模块
-// ====================================================================
-Route::rule('xima/list$', '/log.PayCash/xima_list');           // 洗码记录列表
-Route::rule('agent_auth/list$', '/log.PayCash/auth_list');     // 代理授权列表
-Route::rule('record_money/list$', 'admin/log.PayCash/record_list'); // 下注结算记录列表
-
 // ====================
 // 充值管理
 // ====================

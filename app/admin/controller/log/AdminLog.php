@@ -1,11 +1,11 @@
 <?php
 
 
-namespace app\controller\log;
+namespace app\admin\controller\log;
 
 
-use app\controller\Base;
-use app\model\AdminLog as models;
+use app\admin\controller\Base;
+use app\common\model\AdminLog as models;
 
 class AdminLog extends Base
 {

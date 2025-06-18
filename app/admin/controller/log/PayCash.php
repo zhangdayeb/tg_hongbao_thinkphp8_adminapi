@@ -1,10 +1,10 @@
 <?php
 
 
-namespace app\controller\log;
+namespace app\admin\controller\log;
 
 
-use app\controller\Base;
+use app\admin\controller\Base;
 use app\model\MoneyLog as models;
 
 class PayCash extends Base
