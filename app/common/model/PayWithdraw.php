@@ -32,7 +32,7 @@ class PayWithdraw extends Model
         return self::alias('a')
             ->where($where)
             ->where($map)
-            ->join('common_user b', 'a.u_id = b.id', 'left')
+            ->join('common_user b', 'a.user_id = b.id', 'left')
             ->join('common_admin c', 'a.admin_uid = c.id', 'left')
 //            ->join('common_admin d', 'a.market_uid = d.id', 'left')
             ->join('common_admin d', 'a.agent_uid = d.id', 'left')
