@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace app\model;
+namespace app\common\model;
 
 use app\common\SecurityHelper;
 use app\common\CacheHelper;
