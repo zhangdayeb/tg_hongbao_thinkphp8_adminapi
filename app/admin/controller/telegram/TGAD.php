@@ -229,22 +229,7 @@ class TGAD extends Base
         }
         
         $sendMode = $sendModeMap[$post['send_mode']];
-        
-        // 验证目标群组
-        if (empty($post['target_groups']) || !is_array($post['target_groups'])) {
-            return $this->failed('目标群组不能为空');
-        }
-        
-        // 验证群组是否存在
-        $groupCount = Db::name('tg_crowd_list')
-            ->where('crowd_id', 'in', $post['target_groups'])
-            ->where('del', 0)
-            ->count();
-            
-        if ($groupCount != count($post['target_groups'])) {
-            return $this->failed('部分目标群组不存在');
-        }
-        
+                
         // 根据发送模式验证其他参数
         switch ($post['send_mode']) {
             case 'scheduled':
@@ -302,9 +287,7 @@ class TGAD extends Base
             // 插入广告
             $adId = $this->model->insertGetId($data);
             
-            // 记录目标群组关联 (可以扩展一个关联表)
-            // 这里暂时存储在广告记录的备注或扩展字段中
-            
+           
             Db::commit();
             
             return $this->success(['id' => $adId], '广告创建成功');
@@ -409,23 +392,13 @@ class TGAD extends Base
             return $this->failed('广告不存在');
         }
         
-        // 检查是否可删除
-        if ($advertisement['status'] == 2) {
-            return $this->failed('已完成的广告不能删除');
-        }
         
         // 开启事务
         Db::startTrans();
         try {
             // 删除广告
             $this->model->where('id', $id)->delete();
-            
-            // 删除相关的发送日志
-            Db::name('tg_message_logs')
-                ->where('source_id', $id)
-                ->where('source_type', 'advertisement')
-                ->delete();
-            
+                       
             Db::commit();
             
             return $this->success([], '广告删除成功');
@@ -436,244 +409,6 @@ class TGAD extends Base
         }
     }
 
-    /**
-     * 发送广告
-     * POST /telegram/advertisement/send
-     */
-    public function sendAdvertisement()
-    {
-        $id = $this->request->post('id');
-        
-        if (empty($id)) {
-            return $this->failed('广告ID不能为空');
-        }
-        
-        $advertisement = $this->model->where('id', $id)->find();
-        
-        if (!$advertisement) {
-            return $this->failed('广告不存在');
-        }
-        
-        // 检查状态
-        if ($advertisement['status'] != 1) {
-            return $this->failed('只有启用状态的广告才能发送');
-        }
-        
-        // 检查是否已经发送过(对于一次性广告)
-        if ($advertisement['send_mode'] == 1 && $advertisement['is_sent'] == 1) {
-            return $this->failed('该广告已经发送过了');
-        }
-        
-        // 这里应该调用实际的发送逻辑
-        // 暂时模拟发送成功
-        $sendResult = $this->executeSendAdvertisement($advertisement);
-        
-        if ($sendResult['success']) {
-            // 更新发送记录
-            $updateData = [
-                'total_sent_count' => $advertisement['total_sent_count'] + 1,
-                'success_count' => $advertisement['success_count'] + $sendResult['success_count'],
-                'failed_count' => $advertisement['failed_count'] + $sendResult['failed_count'],
-                'last_sent_time' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ];
-            
-            // 如果是一次性发送，标记为已发送
-            if ($advertisement['send_mode'] == 1) {
-                $updateData['is_sent'] = 1;
-                $updateData['status'] = 2; // 已完成
-            } else {
-                // 计算下次发送时间
-                $updateData['next_send_time'] = $this->calculateNextSendTime($advertisement['send_mode'], $advertisement);
-            }
-            
-            $this->model->where('id', $id)->update($updateData);
-            
-            return $this->success([
-                'sent_count' => $sendResult['success_count'],
-                'failed_count' => $sendResult['failed_count']
-            ], '广告发送成功');
-        } else {
-            return $this->failed('广告发送失败：' . $sendResult['message']);
-        }
-    }
-
-    /**
-     * 获取广告统计
-     * POST /telegram/advertisements/statistics
-     */
-    public function getAdvertisementStatistics()
-    {
-        $post = $this->request->post();
-        $period = $post['period'] ?? 'today';
-        
-        // 构建时间条件
-        $timeMap = $this->getTimeMap($period);
-        
-        // 基础统计
-        $totalStats = [
-            'total_ads' => $this->model->count(),
-            'active_ads' => $this->model->where('status', 1)->count(),
-            'completed_ads' => $this->model->where('status', 2)->count(),
-            'cancelled_ads' => $this->model->where('status', 3)->count()
-        ];
-        
-        // 周期内统计
-        $periodStats = [
-            'period_ads' => $this->model->where($timeMap)->count(),
-            'period_sent' => $this->model->where($timeMap)->sum('total_sent_count'),
-            'period_success' => $this->model->where($timeMap)->sum('success_count'),
-            'period_failed' => $this->model->where($timeMap)->sum('failed_count')
-        ];
-        
-        // 发送模式统计
-        $sendModeStats = [];
-        for ($i = 1; $i <= 3; $i++) {
-            $count = $this->model->where('send_mode', $i)->count();
-            $sendModeStats[] = [
-                'mode' => $this->getSendModeText($i),
-                'mode_value' => $i,
-                'count' => $count
-            ];
-        }
-        
-        // 成功率
-        $successRate = $periodStats['period_sent'] > 0 ? 
-            round($periodStats['period_success'] / $periodStats['period_sent'] * 100, 2) : 0;
-        
-        // 每日趋势（最近7天）
-        $dailyTrend = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = date('Y-m-d', strtotime("-{$i} days"));
-            $dayCount = $this->model->whereTime('created_at', $date)->count();
-            $daySent = $this->model->whereTime('last_sent_time', $date)->sum('total_sent_count');
-            
-            $dailyTrend[] = [
-                'date' => $date,
-                'created_count' => $dayCount,
-                'sent_count' => $daySent ?: 0
-            ];
-        }
-        
-        return $this->success([
-            'total_stats' => $totalStats,
-            'period_stats' => $periodStats,
-            'success_rate' => $successRate,
-            'send_mode_stats' => $sendModeStats,
-            'daily_trend' => $dailyTrend,
-            'period' => $period
-        ]);
-    }
-
-    /**
-     * 执行广告发送（模拟实现）
-     */
-    private function executeSendAdvertisement($advertisement)
-    {
-        // 这里应该是实际的Telegram发送逻辑
-        // 暂时返回模拟结果
-        
-        // 获取活跃群组列表
-        $activeGroups = Db::name('tg_crowd_list')
-            ->where('is_active', 1)
-            ->where('broadcast_enabled', 1)
-            ->where('del', 0)
-            ->select();
-        
-        $successCount = 0;
-        $failedCount = 0;
-        
-        foreach ($activeGroups as $group) {
-            // 模拟发送
-            $sendSuccess = rand(0, 10) > 1; // 90%成功率
-            
-            // 记录发送日志
-            $logData = [
-                'message_type' => 'advertisement',
-                'target_type' => 'group',
-                'target_id' => $group['crowd_id'],
-                'content' => $advertisement['content'],
-                'send_status' => $sendSuccess ? 1 : 2,
-                'error_message' => $sendSuccess ? null : '发送失败',
-                'source_id' => $advertisement['id'],
-                'source_type' => 'advertisement',
-                'sent_at' => date('Y-m-d H:i:s')
-            ];
-            
-            Db::name('tg_message_logs')->insert($logData);
-            
-            if ($sendSuccess) {
-                $successCount++;
-            } else {
-                $failedCount++;
-            }
-        }
-        
-        return [
-            'success' => true,
-            'success_count' => $successCount,
-            'failed_count' => $failedCount,
-            'message' => '发送完成'
-        ];
-    }
-
-    /**
-     * 计算下次发送时间
-     */
-    private function calculateNextSendTime($sendMode, $data)
-    {
-        switch ($sendMode) {
-            case 1: // 立即发送
-                return date('Y-m-d H:i:s');
-                
-            case 2: // 定时发送
-                return $data['send_time'] ?? null;
-                
-            case 3: // 循环发送
-                if (!empty($data['interval_minutes'])) {
-                    return date('Y-m-d H:i:s', time() + $data['interval_minutes'] * 60);
-                } elseif (!empty($data['daily_times'])) {
-                    $times = is_string($data['daily_times']) ? 
-                        explode(',', $data['daily_times']) : $data['daily_times'];
-                    
-                    $now = date('H:i');
-                    $today = date('Y-m-d');
-                    
-                    // 找到今天下一个发送时间点
-                    foreach ($times as $time) {
-                        if (trim($time) > $now) {
-                            return $today . ' ' . trim($time) . ':00';
-                        }
-                    }
-                    
-                    // 如果今天没有了，返回明天第一个时间点
-                    return date('Y-m-d', strtotime('+1 day')) . ' ' . trim($times[0]) . ':00';
-                }
-                break;
-        }
-        
-        return null;
-    }
-
-    /**
-     * 获取时间映射条件
-     */
-    private function getTimeMap($period)
-    {
-        switch ($period) {
-            case 'today':
-                return ['created_at', '>=', date('Y-m-d 00:00:00')];
-                
-            case 'week':
-                return ['created_at', '>=', date('Y-m-d 00:00:00', strtotime('-7 days'))];
-                
-            case 'month':
-                return ['created_at', '>=', date('Y-m-d 00:00:00', strtotime('-30 days'))];
-                
-            default:
-                return ['created_at', '>=', date('Y-m-d 00:00:00')];
-        }
-    }
 
     /**
      * 获取发送模式文本

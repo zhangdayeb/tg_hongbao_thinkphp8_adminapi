@@ -219,5 +219,4 @@ Route::rule('telegram/advertisement/detail', 'telegram.TGAD/getAdvertisementDeta
 Route::rule('telegram/advertisement/create', 'telegram.TGAD/createAdvertisement', 'POST');// 创建广告
 Route::rule('telegram/advertisement/update', 'telegram.TGAD/updateAdvertisement', 'POST');// 更新广告
 Route::rule('telegram/advertisement/delete', 'telegram.TGAD/deleteAdvertisement', 'POST');// 删除广告
-Route::rule('telegram/advertisement/send', 'telegram.TGAD/sendAdvertisement', 'POST');// 发送广告
-Route::rule('telegram/advertisements/statistics', 'telegram.TGAD/getAdvertisementStatistics', 'POST');// 获取广告统计
+

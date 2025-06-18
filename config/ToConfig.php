@@ -1,5 +1,4 @@
 <?php
-//config('ToConfig.app_update.image_url')
 return [
     'app_system' => [
         'app_system' => true,//false win系统 true linux
@@ -15,7 +14,6 @@ return [
         'app_qrcode' => 'https://www.fcgyj.top/#/pages/login/register?code=',//二维码地址 前端的 用来生成 二维码的
     ],
     'app_tg' => [
-        //'tg_url' => 'tg.yhvip666.net/',//推广域名格式  xxx.tg.tp.com?code=asdasds
         'tg_url' => '.tp.com/'
     ],
     'admin_vip' => [

@@ -133,8 +133,10 @@ class UploadData extends BaseController
         $savename = [];
         try {
             validate(['image' => 'filesize:100000|fileExt:,jpg,gpg,png'])->check($files);
+            $baseUrl = config('ToConfig.app_update.image_url', 'https://authapi.wuming888.com/');
             foreach ($files as $file) {
-                $savename[] = \think\facade\Filesystem::putFile('topic', $file);
+                $img_path = \think\facade\Filesystem::putFile('topic', $file);
+                $savename[] = $baseUrl.'/'.$img_path;
             }
         } catch (\think\exception\ValidateException $e) {
             return json(['code' => 0, 'message' => $e->getMessage()]);
