@@ -254,16 +254,13 @@ class TGAD extends Base
                 break;
         }
         
-        // 验证日期范围
-        $startDate = $post['start_date'] ?? date('Y-m-d');
-        $endDate = $post['end_date'] ?? null;
+        // 设置默认日期范围
+        $startDate = !empty($post['start_date']) ? $post['start_date'] : date('Y-m-d'); // 默认为当前日期
+        $endDate = !empty($post['end_date']) ? $post['end_date'] : date('Y-m-d', strtotime('+1 year')); // 默认为一年后
         
-        if ($endDate && strtotime($endDate) < strtotime($startDate)) {
+        if (strtotime($endDate) < strtotime($startDate)) {
             return $this->failed('结束日期不能早于开始日期');
         }
-        
-        // 计算下次发送时间
-        $nextSendTime = $this->calculateNextSendTime($sendMode, $post, $startDate);
         
         // 构建数据
         $data = [
@@ -277,7 +274,7 @@ class TGAD extends Base
             'status' => 1, // 默认启用
             'is_sent' => 0, // 默认未发送
             'last_sent_time' => null,
-            'next_send_time' => $nextSendTime,
+            'next_send_time' => null, // 由定时调度函数计算
             'total_sent_count' => 0,
             'success_count' => 0,
             'failed_count' => 0,
@@ -317,9 +314,8 @@ class TGAD extends Base
             Db::commit();
             
             return $this->success([
-                'id' => $adId,
-                'next_send_time' => $nextSendTime
-            ], '广告创建成功');
+                'id' => $adId
+            ]);
             
         } catch (\Exception $e) {
             Db::rollback();
@@ -371,12 +367,22 @@ class TGAD extends Base
             $updateData['image_url'] = trim($post['image_url']);
         }
         
-        if (isset($post['start_date']) && !$isStarted) {
+        // 设置默认日期处理
+        if (isset($post['start_date']) && !empty($post['start_date']) && !$isStarted) {
             $updateData['start_date'] = $post['start_date'];
+        } else if ((!isset($post['start_date']) || empty($post['start_date'])) && !$isStarted && empty($advertisement['start_date'])) {
+            // 如果前端没有发送start_date或为空且数据库中也没有，设置默认值
+            $updateData['start_date'] = date('Y-m-d');
         }
         
-        if (isset($post['end_date'])) {
-            $updateData['end_date'] = $post['end_date'] ?: null;
+        if (isset($post['end_date']) && !empty($post['end_date'])) {
+            $updateData['end_date'] = $post['end_date'];
+        } else if (isset($post['end_date']) && empty($post['end_date'])) {
+            // 如果明确传了空值，则设置为null
+            $updateData['end_date'] = null;
+        } else if (!isset($post['end_date']) && empty($advertisement['end_date'])) {
+            // 如果前端没有发送end_date且数据库中也没有，设置默认值
+            $updateData['end_date'] = date('Y-m-d', strtotime('+1 year'));
         }
         
         if (isset($post['status']) && in_array($post['status'], [0, 1, 2])) {
@@ -475,27 +481,11 @@ class TGAD extends Base
         }
         
         // 验证日期范围
-        $startDate = $updateData['start_date'] ?? $advertisement['start_date'];
+        $startDate = $updateData['start_date'] ?? $advertisement['start_date'] ?? date('Y-m-d');
         $endDate = $updateData['end_date'] ?? $advertisement['end_date'];
         
         if ($endDate && strtotime($endDate) < strtotime($startDate)) {
             return $this->failed('结束日期不能早于开始日期');
-        }
-        
-        // 重新计算下次发送时间（如果发送相关参数有变化）
-        $needRecalculate = isset($updateData['send_mode']) || 
-                          isset($updateData['send_time']) || 
-                          isset($updateData['daily_times']) || 
-                          isset($updateData['interval_minutes']) ||
-                          isset($updateData['start_date']);
-                          
-        if ($needRecalculate) {
-            $mergedData = array_merge($advertisement, $updateData);
-            $updateData['next_send_time'] = $this->calculateNextSendTime(
-                $mergedData['send_mode'], 
-                $mergedData, 
-                $mergedData['start_date']
-            );
         }
         
         // 开启事务
@@ -510,9 +500,8 @@ class TGAD extends Base
             Db::commit();
             
             return $this->success([
-                'updated_fields' => array_keys($updateData),
-                'next_send_time' => $updateData['next_send_time'] ?? null
-            ], '广告更新成功');
+                'updated_fields' => array_keys($updateData)
+            ]);
             
         } catch (\Exception $e) {
             Db::rollback();
@@ -520,95 +509,7 @@ class TGAD extends Base
         }
     }
 
-    /**
-     * 计算下次发送时间
-     * @param int $sendMode 发送模式
-     * @param array $data 广告数据
-     * @param string $startDate 开始日期
-     * @return string|null
-     */
-    private function calculateNextSendTime($sendMode, $data, $startDate = null)
-    {
-        $now = time();
-        $startDate = $startDate ?: date('Y-m-d');
-        $endDate = $data['end_date'] ?? null;
-        
-        switch ($sendMode) {
-            case 1: // 一次性定时
-                $sendTime = isset($data['send_time']) ? strtotime($data['send_time']) : null;
-                if ($sendTime && $sendTime > $now) {
-                    // 检查是否在有效日期范围内
-                    $sendDate = date('Y-m-d', $sendTime);
-                    if ($sendDate >= $startDate && (!$endDate || $sendDate <= $endDate)) {
-                        return date('Y-m-d H:i:s', $sendTime);
-                    }
-                }
-                return null;
-                
-            case 2: // 每日定时
-                if (empty($data['daily_times'])) {
-                    return null;
-                }
-                
-                $dailyTimes = is_array($data['daily_times']) ? $data['daily_times'] : explode(',', $data['daily_times']);
-                $today = date('Y-m-d');
-                $nextSendTime = null;
-                
-                // 从今天开始查找下一个发送时间
-                for ($i = 0; $i < 7; $i++) { // 最多查找7天
-                    $checkDate = date('Y-m-d', $now + ($i * 86400));
-                    
-                    // 检查是否在有效日期范围内
-                    if ($checkDate < $startDate || ($endDate && $checkDate > $endDate)) {
-                        continue;
-                    }
-                    
-                    foreach ($dailyTimes as $time) {
-                        $time = trim($time);
-                        $sendTimestamp = strtotime($checkDate . ' ' . $time);
-                        
-                        if ($sendTimestamp > $now) {
-                            $nextSendTime = date('Y-m-d H:i:s', $sendTimestamp);
-                            break 2; // 跳出两层循环
-                        }
-                    }
-                }
-                
-                return $nextSendTime;
-                
-            case 3: // 循环间隔
-                $intervalMinutes = (int)($data['interval_minutes'] ?? 0);
-                if ($intervalMinutes <= 0) {
-                    return null;
-                }
-                
-                // 如果有最后发送时间，在此基础上计算下次发送时间
-                if (!empty($data['last_sent_time'])) {
-                    $lastSentTime = strtotime($data['last_sent_time']);
-                    $nextSendTime = $lastSentTime + ($intervalMinutes * 60);
-                } else {
-                    // 如果没有最后发送时间，从当前时间开始计算
-                    $nextSendTime = $now + ($intervalMinutes * 60);
-                }
-                
-                $nextSendDate = date('Y-m-d', $nextSendTime);
-                
-                // 检查是否在有效日期范围内
-                if ($nextSendDate >= $startDate && (!$endDate || $nextSendDate <= $endDate)) {
-                    return date('Y-m-d H:i:s', $nextSendTime);
-                }
-                
-                return null;
-                
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * 删除广告
-     * POST /telegram/advertisement/delete
-     */
+    
     public function deleteAdvertisement()
     {
         $id = $this->request->post('id');
@@ -617,22 +518,16 @@ class TGAD extends Base
             return $this->failed('广告ID不能为空');
         }
         
-        $advertisement = $this->model->where('id', $id)->find();
-        
-        if (!$advertisement) {
-            return $this->failed('广告不存在');
-        }
-        
-        
         // 开启事务
         Db::startTrans();
         try {
-            // 删除广告
-            $this->model->where('id', $id)->delete();
-                       
+            // 直接尝试删除，返回受影响的行数
+            $result = $this->model->where('id', $id)->delete();
+            
             Db::commit();
             
-            return $this->success([], '广告删除成功');
+            // 无论是否删除成功都返回成功（幂等性）
+            return $this->success([], 1, '广告删除成功');
             
         } catch (\Exception $e) {
             Db::rollback();
