@@ -1,11 +1,11 @@
 <?php
 
 
-namespace app\admin\controller\log;
+namespace app\controller\log;
 
 
-use app\admin\controller\Base;
-use app\common\model\AdminLog as models;
+use app\controller\Base;
+use app\model\AdminLog as models;
 
 class AdminLog extends Base
 {
@@ -30,10 +30,8 @@ class AdminLog extends Base
         //每页显示数量
         $limit = $this->request->post('limit', 10);
         //查询搜索条件
-
         //没办法区分type
         $list =$this->model->order('id desc')->paginate(['list_rows'=>$limit,'page'=>$page]);;
-
-        return $this->success($list);
+         $this->success($list);
     }
 }

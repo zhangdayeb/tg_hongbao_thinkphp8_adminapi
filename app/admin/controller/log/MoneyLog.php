@@ -1,11 +1,12 @@
 <?php
 
 
-namespace app\admin\controller\log;
+namespace app\controller\log;
 
 
-use app\admin\controller\Base;
-use app\common\model\MoneyLog as models;
+use app\controller\Base;
+use app\model\MoneyLog as models;
+use app\model\UserModel;
 
 class MoneyLog extends Base
 {
@@ -31,19 +32,63 @@ class MoneyLog extends Base
         //每页显示数量
         $limit = $this->request->post('limit', 10);
         //查询搜索条件
-        $post = $this->request->post();
-        $map =[];
+        $post = array_filter($this->request->post());
+        $map = $date = [];
 
-        isset($post['status']) && $post['status']!='' && $map[]= ['a.status','=',$post['status']]; // 资金用途
-        isset($post['type']) && $post['type']!='' && $map[]= ['a.type','=',$post['type']]; // 大类型 收支 什么的
-        isset($post['money_type'])&& $post['money_type']!='' && $map[]= ['a.money_type','=',$post['money_type']]; // 钱的类型
-        isset($post['user_id']) && $post['user_id']!='' && $map[]= ['uid','=',$post['user_id']]; // 用户ID
-        isset($post['search_mark']) && $post['search_mark']!='' && $map[]= ['mark','like','%'.$post['search_mark'].'%']; // 备注查询
-        isset($post['user_phone']) && $post['user_phone']!='' && $map[]= ['b.phone', 'like', '%' . $post['user_phone'] . '%']; // 用户名 模糊查询
-        $order = 'a.id desc';
-        isset($post['create_time_sort'])&& $order='a.id '.$post['create_time_sort'];
+        isset($post['uid']) && $map[] = ['uid', '=', $post['uid']];
+        $order = 'id desc';
+        isset($post['create_time_sort']) && $order = 'id ' . $post['create_time_sort'];
+        isset($post['start']) && $date['start'] = $post['start'];
+        isset($post['end']) && $date['end'] = $post['end'];
 
-        $list =$this->model->page_list($map,$limit,$page,$order);
-        return $this->success($list);
+        $status_where_user = [];
+        if (isset($post['user_name'])) {//查询指定用户的
+            $user_find = UserModel::where('user_name|nickname', $post['user_name'])->find();
+            if (empty($user_find)) $this->failed('用户不存在');
+            if (!in_array($user_find->id, $this->request->admin_user['direct_list'])) $this->failed('没权限查看该用户');  //没权限查看该用户
+            $status_where_user[] = $map[] = ['uid', '=', $user_find->id];
+        } else {
+            if (isset($post['type'])) { //查询的角色  代理和会员
+                if ($post['type'] == 1) {//直属代理
+                    $status_where_user[] = $map[] = ['uid', 'in', $this->request->admin_user['agent_list']];
+                } elseif ($post['type'] == 2) {//直属会员
+                    $status_where_user[] = $map[] = ['uid', 'in', $this->request->admin_user['user_list']];
+                } else {//全部直属代理和直属会员
+                    $status_where_user[] = $map[] = ['uid', 'in', $this->request->admin_user['direct_list']];
+                }
+            }else{
+                $status_where_user[] = $map[] = ['uid', 'in', array_merge_func($this->request->admin_user['user_all_list'],$this->request->admin_user['agent_all_list'])];
+            }
+        }
+        //状态查询存在的时候
+        if (isset($post['status'])){
+            if ($this->request->admin_user->agent > 0) { //存在状态查询时后，统计金额
+                $status_map = $this->agent_status($post['status']);
+            } else {
+                $status_map = $this->admin_status($post['status']);
+
+            }
+            $map[] = array_merge_func($map,$status_map['status_where']);
+        }
+
+        //查询列表消息
+        $list = $this->model->page_list($map, $limit, $page, $order, $date);
+        if (!isset($post['status'])) $this->success($list);
+        $list = $list->toArray();
+
+        //存在查询状态 的时候 统计金额
+        $money = $this->model->count_money($status_map['status_where'], $status_where_user,$date);
+
+        $list['money'] = $money;
+        $list['status_name'] = $status_map['status_name'];
+        $this->success($list);
+    }
+
+
+
+    public function status_type()
+    {
+        $status_type = $this->model->getStatusAttr('status_type');
+        $this->success($status_type);
     }
 }

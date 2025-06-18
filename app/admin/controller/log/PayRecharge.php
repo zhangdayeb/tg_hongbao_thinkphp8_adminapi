@@ -1,21 +1,16 @@
 <?php
 
 
-namespace app\admin\controller\log;
+namespace app\controller\log;
 
 
-use app\admin\controller\Base;
-
-use app\common\model\PayRecharge as models;
-use app\common\model\User;
-use app\common\traites\PublicCrudTrait;
-use think\exception\ValidateException;
-use think\facade\Db;
+use app\controller\Base;
+use app\model\MoneyLog as models;
 
 class PayRecharge extends Base
 {
     protected $model;
-    use PublicCrudTrait;
+
     /**
      * 充值控制器
      */
@@ -26,85 +21,40 @@ class PayRecharge extends Base
     }
 
     /**
-     * 菜单栏目树
+     * 列表
      */
     public function index()
     {
+
         //当前页
         $page = $this->request->post('page', 1);
         //每页显示数量
         $limit = $this->request->post('limit', 10);
-          //查询搜索条件
-        $post =$this->request->post();
+        //查询搜索条件
+        $post = array_filter($this->request->post());
         $map = $date = [];
-        isset($post['status'])&& $post['status']!='' && $map[]= ['a.status','=',$post['status']];
-        isset($post['type']) && $post['type']!='' && $map[]= ['a.type','=',$post['type']];
-        isset($post['user_name'])&& $map[]= ['b.user_name', 'like', '%' . $post['user_name'] . '%'];
-        isset($post['agents']) && $post['agents']!='' && $map[]= ['b.market_uid', '=',$post['agents']];
-        if (isset($post['start']) && isset($post['end'])) {
-            $date['start'] = $post['start'];
-            $date['end'] = $post['end'];
-        }
-        $list = $this->model->page_list($map, $limit, $page, $date);
-        return $this->success($list);
-    }
-    /**
-     *
-     * 通过
-     * */
-    public function pass(){
-        //过滤数据
-        $postField = 'id,money';
-        $post = $this->request->only(explode(',', $postField), 'post', null);
-        //检测订单
-        $find = $this->model->where('id', (int)$post['id'])->where('status',0)->find();
-        if (!$find) return $this->failed('该充值订单已处理或不存在');
-       if (isset($post['money']) && $post['money']>0){
-           $money=$post['money'];
-       }else{
-           $money=$find['money'];
-       }
-        $User=new User();
-        $user=$User->where('id',$find['uid'])->find();
-        Db::startTrans();
-        try {
-            //充值到账户里面
-            Db::name('common_user')->where('id',$find['uid'])->inc('money_balance',$find['money'])->update();
-            Db::name('common_user')->where('id',$find['uid'])->inc('money_all_recharge',$find['money'])->update();
-            //记录
-            \app\common\model\MoneyLog::flowing(1,1,1,101,$user,$find['money'],$post['id'],'充值后台审批通过','money_balance');
-            $post['before_balance']=$user['money_balance']+$find['money'];
-            $post['status']=1;
-            $post['success_time']=date('Y-m-d H:i:s');
-            $post['admin_uid']= session('admin_user')['id'];
-            //执行修改数据
-            $this->model->update($post);
-            Db::commit();
-            return $this->success([]);
-        } catch (ValidateException $e) {
-            Db::rollback();
-            // 验证失败 输出错误信息
-            return $this->failed($e->getError());
-        }
-    }
+        $order = 'id desc';
+        isset($post['create_time_sort']) && $order = 'id ' . $post['create_time_sort'];
+        //代理查询存在是，清除其他查询只保留代理查询
+        isset($post['start']) && $date['start'] = $post['start'];
+        isset($post['end']) && $date['end'] = $post['end'];
 
-    /**
-     * 拒绝
-     * */
-    public function refuse(){
-        //过滤数据
-        $postField = 'id';
-        $post = $this->request->only(explode(',', $postField), 'post', null);
-        //检测订单
-        $find = $this->model->where('id', (int)$post['id'])->where('status',0)->find();
-        if (!$find) return $this->failed('该充值订单已处理或不存在');
-        $post['status']=2;
-        $post['success_time']=date('Y-m-d H:i:s');
-        $post['admin_uid']= session('admin_user')['id'];
-        //执行修改数据
-        $save = $this->model->update($post);
-        if ($save) return $this->success([]);
-        return $this->failed('失败');
-    }
+        //查询的状态
+        $map[] = ['status','in',models::$recharge_status];
 
+        isset($post['uid']) && $map[] = ['uid', '=', $post['uid']];
+
+        if (isset($post['user_name'])) {//查询指定用户的
+            $map[] = $this->map_user_name($post['user_name']);
+        } else {//查询所有//代理查询所有下级，管理员查询平台所有的用户
+                $map[] = ['uid', 'in', $this->request->admin_user['user_list']];
+        }
+
+        $money = $this->model->count_money($map, [],$date);
+        $list = $this->model->page_list($map, $limit, $page, $order, $date);
+        $list = $list->toArray();
+        $list['money'] = $money;
+        $list['status_name'] = '充值：';
+        $this->success($list);
+    }
 }
