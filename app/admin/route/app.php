@@ -8,7 +8,6 @@ use think\facade\Route;
 Route::rule('login/index$', 'Login/index');                    // 登录
 Route::rule('login/captcha$', 'Login/captcha');                // 验证码
 Route::rule('login/captcha_check$', 'Login/captcha_check');    // 验证码验证
-Route::rule('login/agent$', 'agentLogin/index');               // 服务商登录
 Route::rule('login/she$', 'Login/she');                        // 服务商登录
 Route::rule('login/updateKLine$', 'Login/updateKLine');        // 更新K线
 Route::rule('login/log$', 'log.LoginLog/index');               // 登录日志
@@ -18,9 +17,8 @@ Route::rule('login/log$', 'log.LoginLog/index');               // 登录日志
 // ====================
 Route::rule('upload/image$', 'UploadData/image');              // 上传图片
 Route::rule('upload/video$', 'UploadData/video');              // 上传视频
-Route::rule('upload/index$', 'VideoFf/index');                 // 上传首页
-Route::rule('upload/qrcode$', '/upload.UploadData/qrcode');    // 二维码图片上传
-Route::rule('upload/qrcode_list$', '/upload.UploadData/qrcodeList'); // 二维码列表
+Route::rule('upload/qrcode$', 'UploadData/qrcode');            // 修正路径
+Route::rule('upload/qrcode_list$', 'UploadData/qrcodeList');   // 修正路径
 
 // ====================
 // 后台管理相关路由
@@ -109,22 +107,6 @@ Route::rule('recharge/status$', 'log.PayRecharge/status');     // 确认充值
 Route::rule('recharge/pass$', 'log.PayRecharge/pass');         // 充值通过
 Route::rule('recharge/refuse$', 'log.PayRecharge/refuse');     // 充值拒绝
 
-
-// ====================
-// 银行卡管理
-// ====================
-Route::rule('bank/list$', 'PayBank/index');                   // 银行卡列表
-Route::rule('bank/del$', 'PayBank/del');                      // 银行卡删除
-Route::rule('bank/default$', 'PayBank/default');              // 银行卡修改默认卡
-
-// ====================
-// 系统配置管理
-// ====================
-Route::rule('config/list$', 'SysConfig/index');               // 后台配置文件列表
-Route::rule('config/add$', 'SysConfig/add');                  // 后台配置添加
-Route::rule('config/edit$', 'SysConfig/edit');                // 后台配置修改
-Route::rule('config/detail$', 'SysConfig/detail');            // 配置详情
-Route::rule('config/del$', 'SysConfig/del');                  // 配置删除
 
 // ====================
 // 用户管理
