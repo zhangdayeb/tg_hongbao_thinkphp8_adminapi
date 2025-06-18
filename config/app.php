@@ -4,19 +4,6 @@
 // +----------------------------------------------------------------------
 
 return [
-    // 腾讯管理员 账号
-    'tencent_adminuser' => 'administrator',
-    // 腾讯 配置 用法 sdkapidi $this->app->config->get('app.sdkapiid') 
-    // 腾讯 配置 密钥
-    'tencent_sdkapiid'  => 20011222,
-    'tencent_key'       => 'c2adf5369adda1b686ce91b0e90d9a9d2360fc72c0683d41395d555ec57ae5ec',
-    //音频
-    'audio_sdkappid'    =>20011222,
-    'audio_sdkkey'      =>'c2adf5369adda1b686ce91b0e90d9a9d2360fc72c0683d41395d555ec57ae5ec',
-    // 默认是否 添加
-    'tencent_is_add_friend' => false,
-    // 默认添加好友的 ID / 就是用户的名字 多用户 用 | 分割
-    'tencent_add_friends_list' => 'test001',
     // 应用地址
     'app_host'         => env('app.host', ''),
 
@@ -25,7 +12,7 @@ return [
     // 是否启用路由
     'with_route'       => true,
     // 默认应用
-    'default_app'      => 'index',
+    'default_app'      => 'admin',
     // 默认时区
     'default_timezone' => 'Asia/Shanghai',
 
