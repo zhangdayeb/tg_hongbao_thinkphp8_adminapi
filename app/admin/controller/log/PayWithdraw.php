@@ -7,7 +7,7 @@ namespace app\admin\controller\log;
 use app\admin\controller\Base;
 use app\model\MoneyLog as models;
 
-class PayCash extends Base
+class PayWithdraw extends Base
 {
     protected $model;
 

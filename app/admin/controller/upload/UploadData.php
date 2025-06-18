@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controller\upload;
+namespace app\admin\controller\upload;
 
 use app\BaseController;
 

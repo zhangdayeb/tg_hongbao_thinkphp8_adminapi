@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\controller\login;
+namespace app\admin\controller\login;
 
 
 use app\BaseController;

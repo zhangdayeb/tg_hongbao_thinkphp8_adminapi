@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\controller\user;
+namespace app\admin\controller\user;
 
 use app\controller\Base;
 use app\model\MarketLevel as models;
