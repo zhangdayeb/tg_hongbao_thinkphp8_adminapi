@@ -5,7 +5,7 @@ namespace app\admin\controller\user;
 
 use app\admin\controller\Base;
 use app\model\AdminModel as models;
-use app\traits\PublicCrudTrait;
+use app\common\traites\PublicCrudTrait;
 use app\validate\Admin;
 use think\exception\ValidateException;
 use think\facade\Db;

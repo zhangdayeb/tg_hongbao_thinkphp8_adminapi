@@ -9,7 +9,7 @@ use app\model\AgentLavel;
 use app\model\MoneyLog;
 use app\model\UserModel as models;
 use app\model\UserSet;
-use app\traits\PublicCrudTrait;
+use app\common\traites\PublicCrudTrait;
 use app\validate\User as validates;
 use think\exception\ValidateException;
 use think\facade\Db;
