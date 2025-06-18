@@ -189,3 +189,37 @@ Route::rule('api/notification/latest-withdraws$', 'log.TongZhi/getLatestWithdraw
 Route::rule('api/notification/mark-read$', 'log.TongZhi/markNotificationsRead');     // 标记已读
 Route::rule('api/notification/test$', 'log.TongZhi/test');                           // 测试接口
 Route::rule('api/notification/trigger$', 'log.TongZhi/triggerNotification');        // 触发通知
+
+
+
+// ====================
+// Telegram群组管理
+// ====================
+Route::rule('telegram/group/list$', 'telegram.TGTelegram/index');              // Telegram群组列表
+Route::rule('telegram/group/detail$', 'telegram.TGTelegram/detail');           // Telegram群组详情
+Route::rule('telegram/group/add$', 'telegram.TGTelegram/add');                 // 添加Telegram群组
+Route::rule('telegram/group/edit$', 'telegram.TGTelegram/edit');               // 编辑Telegram群组
+Route::rule('telegram/group/delete$', 'telegram.TGTelegram/delete');           // 删除Telegram群组
+Route::rule('telegram/group/batch_delete$', 'telegram.TGTelegram/batchDelete'); // 批量删除Telegram群组
+Route::rule('telegram/group/change_status$', 'telegram.TGTelegram/changeStatus'); // 修改群组状态
+Route::rule('telegram/group/change_broadcast$', 'telegram.TGTelegram/changeBroadcast'); // 修改广播状态
+Route::rule('telegram/group/statistics$', 'telegram.TGTelegram/statistics');   // Telegram群组统计
+Route::rule('telegram/group/activity_ranking$', 'telegram.TGTelegram/activityRanking'); // 群组活跃度排行
+Route::rule('telegram/group/export$', 'telegram.TGTelegram/export');           // 导出群组列表
+
+// ====================
+// Telegram红包管理
+// ====================
+Route::rule('telegram/redpacket/list$', 'telegram.TGRedPacket/index');         // 红包列表
+Route::rule('telegram/redpacket/detail$', 'telegram.TGRedPacket/detail');      // 红包详情
+Route::rule('telegram/redpacket/create_system$', 'telegram.TGRedPacket/createSystem'); // 创建系统红包
+Route::rule('telegram/redpacket/revoke$', 'telegram.TGRedPacket/revoke');      // 撤回红包
+Route::rule('telegram/redpacket/extend$', 'telegram.TGRedPacket/extend');      // 延期红包
+Route::rule('telegram/redpacket/change_status$', 'telegram.TGRedPacket/changeStatus'); // 修改红包状态
+Route::rule('telegram/redpacket/statistics$', 'telegram.TGRedPacket/statistics'); // 红包统计
+Route::rule('telegram/redpacket/export$', 'telegram.TGRedPacket/export');      // 导出红包数据
+
+// ====================
+// Telegram红包记录管理
+// ====================
+Route::rule('telegram/redpacket/records$', 'telegram.TGRedPacket/records');    // 红包领取记录列表
