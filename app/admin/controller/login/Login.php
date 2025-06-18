@@ -5,7 +5,7 @@ namespace app\admin\controller\login;
 
 
 use app\BaseController;
-use app\admin\controller\log\LoginLog;
+use app\common\service\LoginLog;  // 使用服务类而不是控制器类
 use app\common\model\AdminModel;
 use app\common\model\TokenModel;
 use app\common\validate\Login as validates;
