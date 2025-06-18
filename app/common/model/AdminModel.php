@@ -13,10 +13,14 @@ class AdminModel extends Model
     public $name = 'common_admin';
 
 
-//    public function getPwdAttr($value)
-//    {
-//        return '';
-//    }
+    public static function queryMap(array $map,int $type =1 )
+    {
+        if ($type == 1){
+            return self::where($map)->find();
+        }
+        return self::where($map)->select();
+    }
+    
     public static function page_list($map,$limit, $page)
     {
         return self::alias('a')
