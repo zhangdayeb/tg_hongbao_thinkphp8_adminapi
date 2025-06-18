@@ -2,7 +2,7 @@
 
 namespace app\admin\controller\user;
 
-use app\controller\Base;
+use app\admin\controller\Base;
 use app\model\RealName as models;
 
 class RealName extends Base

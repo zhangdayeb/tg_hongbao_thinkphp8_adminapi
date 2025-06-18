@@ -3,7 +3,7 @@
 namespace app\admin\controller\user;
 
 
-use app\controller\Base;
+use app\admin\controller\Base;
 use app\model\AdminModel as models;
 use app\traits\PublicCrudTrait;
 use app\validate\Admin;
