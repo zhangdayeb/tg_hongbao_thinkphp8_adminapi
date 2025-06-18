@@ -3,34 +3,32 @@
 use think\facade\Route;
 
 // ====================
-// 登录相关路由
-// ====================
-Route::rule('login/index$', 'Login/index');                    // 登录
-Route::rule('login/captcha$', 'Login/captcha');                // 验证码
-Route::rule('login/captcha_check$', 'Login/captcha_check');    // 验证码验证
-Route::rule('login/she$', 'Login/she');                        // 服务商登录
-Route::rule('login/updateKLine$', 'Login/updateKLine');        // 更新K线
-Route::rule('login/log$', 'log.LoginLog/index');               // 登录日志
-
-// ====================
-// 文件上传相关路由
-// ====================
-Route::rule('upload/image$', 'UploadData/image');              // 上传图片
-Route::rule('upload/video$', 'UploadData/video');              // 上传视频
-Route::rule('upload/qrcode$', 'UploadData/qrcode');            // 修正路径
-Route::rule('upload/qrcode_list$', 'UploadData/qrcodeList');   // 修正路径
-
-// ====================
 // 后台管理相关路由
 // ====================
 Route::rule('/$', 'Index/index');                              // 后台首页
-Route::rule('admin/list$', 'Index/index');                     // 后台用户列表
-Route::rule('admin/add$', 'Index/add');                        // 后台用户添加
-Route::rule('admin/edit$', 'Index/edit');                      // 后台用户修改
-Route::rule('admin/detail$', 'Index/detail');                  // 后台用户信息查看
-Route::rule('admin/del$', 'Index/del');                        // 后台用户删除
-Route::rule('admin/excel$', 'Login/exportWithdraw');           // 提现账单导出
-Route::rule('admin/log$', 'log.AdminLog/index');               // 后台操作日志
+
+// ====================
+// 登录相关路由
+// ====================
+Route::rule('login/index$', 'Login/Login');                    // 登录
+Route::rule('login/log$', 'log.LoginLog/index');               // 登录日志
+
+// ====================================================================
+// 文件上传模块
+// ====================================================================
+Route::rule('upload/video$', '/upload.UploadData/video'); // 视频文件上传
+Route::rule('upload/image$', '/upload.UploadData/image'); // 图片文件上传
+Route::rule('upload/qrcode$', '/upload.UploadData/qrcode'); // 二维码图片上传
+Route::rule('upload/qrcode_list$', '/upload.UploadData/qrcodeList'); // 二维码列表
+
+// ====================================================================
+// 后台管理员模块
+// ====================================================================
+Route::rule('admin/list$', '/user.Admins/index');    // 后台管理员列表
+Route::rule('admin/add$', '/user.Admins/add');       // 添加后台管理员
+Route::rule('admin/edit$', '/user.Admins/edit');     // 编辑后台管理员
+Route::rule('admin/detail$', '/user.Admins/detail'); // 管理员信息查看
+Route::rule('admin/del$', '/user.Admins/del');       // 删除后台管理员
 
 // ====================
 // 菜单管理相关路由
@@ -101,34 +99,18 @@ Route::rule('recharge/pass$', 'log.PayRecharge/pass');         // 充值通过
 Route::rule('recharge/refuse$', 'log.PayRecharge/refuse');     // 充值拒绝
 
 
-// ====================
-// 用户管理
-// ====================
-Route::rule('money/edit$', 'Member/money_edit');              // 用户余额修改
-Route::rule('money/caijin$', 'Member/caijin');                // 用户身份证审核
-Route::rule('user/is_status$', 'Member/is_status');           // 用户是否虚拟账号设置
-Route::rule('user/list$', 'Member/index');                    // 用户列表
-Route::rule('user/agent$', 'Member/agent_data');              // 代理商信息
-Route::rule('user/edit$', 'Member/edit');                     // 用户修改
-Route::rule('user/add$', 'Member/add');                       // 用户添加
-Route::rule('user/del$', 'Member/del');                       // 用户删除
-Route::rule('user/detail$', 'Member/detail');                 // 用户详情
-Route::rule('user/status$', 'Member/status');                 // 用户状态修改
-Route::rule('user/teamlist$', 'Member/team_list');            // 团队状况
-Route::rule('user/teamfeng$', 'Member/team_feng');            // 团队整线封印解封
-Route::rule('user/teamshow$', 'Member/team_show');            // 团队整线显示
-Route::rule('user/is_real_name$', 'Member/is_real_name');     // 用户实名状态修改
-Route::rule('user/is_status_user$', 'Member/is_status_user'); // 用户状态修改
-Route::rule('user/is_status_money$', 'Member/is_status_money'); // 用户金额状态修改
-Route::rule('user/is_status_transfer$', 'Member/is_status_transfer'); // 用户转账状态修改
-Route::rule('user/is_status_income$', 'Member/is_status_income'); // 用户收入状态修改
-Route::rule('user/t_xiaxian$', 'Member/t_xiaxian');           // 用户下线
-Route::rule('user/product_order_list$', 'Member/product_order_list'); // 用户产品订单列表
-Route::rule('user/iplist$', 'Member/iplist');                 // 用户IP列表
-Route::rule('user/updateIDCard$', 'Member/updateIDCard');     // 更新身份证
-Route::rule('user/updateBankCard$', 'Member/updateBankCard'); // 更新银行卡
-Route::rule('user/getAddress$', 'Member/getAddress');         // 用户地址获取
-Route::rule('user/ranking$', 'Member/ranking');               // 用户排名
+// ====================================================================
+// 用户管理模块
+// ====================================================================
+Route::rule('user/is_status$', '/user.User/is_status'); // 用户虚拟账号状态设置
+Route::rule('user/list$', '/user.User/index');          // 用户列表
+Route::rule('user/info$', '/user.User/user_info');      // 指定用户信息查看
+Route::rule('user/edit$', '/user.User/edit');      // 编辑用户信息
+Route::rule('user/add$', '/user.User/add');        // 添加用户
+Route::rule('user/del$', '/user.User/del');        // 删除用户
+Route::rule('user/detail$', '/user.User/detail');  // 用户详情查看
+Route::rule('user/status$', '/user.User/status');  // 用户状态修改
+Route::rule('money/edit$', '/user.User/money_edit');    // 用户余额修改
 
 // ====================
 // 注册统计
