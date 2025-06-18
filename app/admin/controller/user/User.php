@@ -4,13 +4,13 @@ namespace app\admin\controller\user;
 
 
 use app\admin\controller\Base;
-use app\model\AdminModel;
-use app\model\AgentLavel;
-use app\model\MoneyLog;
-use app\model\UserModel as models;
-use app\model\UserSet;
+use app\common\model\AdminModel;
+use app\common\model\AgentLavel;
+use app\common\model\MoneyLog;
+use app\common\model\UserModel as models;
+use app\common\model\UserSet;
 use app\common\traites\PublicCrudTrait;
-use app\validate\User as validates;
+use app\common\validate\User as validates;
 use think\exception\ValidateException;
 use think\facade\Db;
 

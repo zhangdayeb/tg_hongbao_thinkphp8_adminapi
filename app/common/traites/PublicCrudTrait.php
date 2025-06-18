@@ -4,7 +4,7 @@
 namespace app\common\traites;
 
 use app\common\model\MoneyLog;
-use app\validate\Status;
+use app\common\validate\Status;
 use think\exception\ValidateException;
 
 /**

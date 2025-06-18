@@ -10,8 +10,8 @@ Route::rule('/$', 'Index/index');                              // 后台首页
 // ====================
 // 登录相关路由
 // ====================
-Route::rule('login/index$', 'Login/Login');                    // 登录
-Route::rule('login/log$', 'log.LoginLog/index');               // 登录日志
+Route::rule('login/index$', 'login.Login/Login');                    // 登录
+
 
 // ====================================================================
 // 文件上传模块

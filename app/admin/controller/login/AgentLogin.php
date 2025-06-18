@@ -5,10 +5,10 @@ namespace app\admin\controller\login;
 
 
 use app\BaseController;
-use app\business\LoginLog;
-use app\model\TokenModel;
-use app\model\UserModel;
-use app\validate\Login as validates;
+use app\admin\log\LoginLog;
+use app\common\model\TokenModel;
+use app\common\model\UserModel;
+use app\common\validate\Login as validates;
 use think\exception\ValidateException;
 use think\facade\Cache;
 

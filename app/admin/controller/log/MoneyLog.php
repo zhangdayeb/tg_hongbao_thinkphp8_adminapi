@@ -5,8 +5,8 @@ namespace app\admin\controller\log;
 
 
 use app\admin\controller\Base;
-use app\model\MoneyLog as models;
-use app\model\UserModel;
+use app\common\model\MoneyLog as models;
+use app\common\model\UserModel;
 
 class MoneyLog extends Base
 {

@@ -5,7 +5,7 @@ namespace app\admin\controller\user;
 
 
 use app\admin\controller\Base;
-use app\model\PayBank as models;
+use app\common\model\PayBank as models;
 use app\common\traites\PublicCrudTrait;
 use \app\validate\PayBank as validates;
 use think\exception\ValidateException;

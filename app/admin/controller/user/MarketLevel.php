@@ -4,7 +4,7 @@
 namespace app\admin\controller\user;
 
 use app\admin\controller\Base;
-use app\model\MarketLevel as models;
+use app\common\model\MarketLevel as models;
 use app\common\traites\PublicCrudTrait;
 use think\exception\ValidateException;
 use \app\validate\MarketLevel as validates;

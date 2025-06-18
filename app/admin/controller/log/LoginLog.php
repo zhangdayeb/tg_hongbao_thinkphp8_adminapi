@@ -5,7 +5,7 @@ namespace app\admin\controller\log;
 
 
 use app\admin\controller\Base;
-use app\model\LoginLog as models;
+use app\common\model\LoginLog as models;
 use think\facade\Db;
 
 class LoginLog extends Base
