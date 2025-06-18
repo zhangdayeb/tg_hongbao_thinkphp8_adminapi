@@ -34,21 +34,13 @@ Route::rule('admin/del$', '/user.Admins/del');       // 删除后台管理员
 // 菜单管理相关路由
 // ====================
 Route::rule('menu/list$', 'auth.Menu/index');                  // 后台菜单列表
-Route::rule('menu/add$', 'auth.Menu/add');                     // 后台菜单添加
-Route::rule('menu/edit$', 'auth.Menu/edit');                   // 后台菜单修改
-Route::rule('menu/detail$', 'auth.Menu/detail');               // 后台菜单详情
-Route::rule('menu/del$', 'auth.Menu/del');                     // 后台菜单删除
 Route::rule('menu/column$', 'auth.Menu/lists');                // 后台表单列表
-Route::rule('menu/status$', 'auth.Menu/status');               // 后台菜单状态
 
 // ====================
 // 权限控制相关路由
 // ====================
 Route::rule('action/list$', 'auth.Action/index');              // 后台控制列表
 Route::rule('action/add$', 'auth.Action/add');                 // 后台控制添加
-Route::rule('action/edit$', 'auth.Action/edit');               // 后台控制修改
-Route::rule('action/del$', 'auth.Action/del');                 // 后台控制删除
-Route::rule('action/status$', 'auth.Action/status');           // 后台控制状态
 Route::rule('action/con$', 'auth.Action/list_con');            // 后台控制显示
 
 // ====================
