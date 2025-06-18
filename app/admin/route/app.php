@@ -19,6 +19,8 @@ Route::rule('login/log$', 'log.LoginLog/index');               // 登录日志
 Route::rule('upload/image$', 'UploadData/image');              // 上传图片
 Route::rule('upload/video$', 'UploadData/video');              // 上传视频
 Route::rule('upload/index$', 'VideoFf/index');                 // 上传首页
+Route::rule('upload/qrcode$', '/upload.UploadData/qrcode');    // 二维码图片上传
+Route::rule('upload/qrcode_list$', '/upload.UploadData/qrcodeList'); // 二维码列表
 
 // ====================
 // 后台管理相关路由
@@ -78,7 +80,6 @@ Route::rule('power/list$', 'auth.RolePower/index');            // 角色API接�
 Route::rule('power/add$', 'auth.RolePower/add');               // 角色API接口添加
 Route::rule('power/edit$', 'auth.RolePower/edit');             // 角色API接口修改
 
-
 // ====================
 // 日志管理
 // ====================
@@ -93,6 +94,13 @@ Route::rule('pay/refuse$', 'log.PayWithdraw/refuse');          // 提现拒绝
 Route::rule('pay/is_line$', 'log.PayWithdraw/is_line');        // 线上线下
 Route::rule('pay/amount$', 'log.PayWithdraw/amount_edit');     // 修改金额
 
+// ====================================================================
+// 提现管理模块
+// ====================================================================
+Route::rule('xima/list$', '/log.PayCash/xima_list');           // 洗码记录列表
+Route::rule('agent_auth/list$', '/log.PayCash/auth_list');     // 代理授权列表
+Route::rule('record_money/list$', 'admin/log.PayCash/record_list'); // 下注结算记录列表
+
 // ====================
 // 充值管理
 // ====================
@@ -102,14 +110,12 @@ Route::rule('recharge/pass$', 'log.PayRecharge/pass');         // 充值通过
 Route::rule('recharge/refuse$', 'log.PayRecharge/refuse');     // 充值拒绝
 
 
-
 // ====================
 // 银行卡管理
 // ====================
 Route::rule('bank/list$', 'PayBank/index');                   // 银行卡列表
 Route::rule('bank/del$', 'PayBank/del');                      // 银行卡删除
 Route::rule('bank/default$', 'PayBank/default');              // 银行卡修改默认卡
-
 
 // ====================
 // 系统配置管理
@@ -119,7 +125,6 @@ Route::rule('config/add$', 'SysConfig/add');                  // 后台配置添
 Route::rule('config/edit$', 'SysConfig/edit');                // 后台配置修改
 Route::rule('config/detail$', 'SysConfig/detail');            // 配置详情
 Route::rule('config/del$', 'SysConfig/del');                  // 配置删除
-
 
 // ====================
 // 用户管理
@@ -150,7 +155,6 @@ Route::rule('user/updateBankCard$', 'Member/updateBankCard'); // 更新银行卡
 Route::rule('user/getAddress$', 'Member/getAddress');         // 用户地址获取
 Route::rule('user/ranking$', 'Member/ranking');               // 用户排名
 
-
 // ====================
 // 注册统计
 // ====================
@@ -172,7 +176,6 @@ Route::rule('withdrawal/all$', 'count.Withdrawal/index');     // 今日提现与
 Route::rule('withdrawal/today$', 'count.Withdrawal/today_withdrawal'); // 今日提现
 Route::rule('withdrawal/total$', 'count.Withdrawal/total_withdrawal'); // 总提现
 
-
 // ====================
 // Google验证码相关
 // ====================
@@ -180,9 +183,27 @@ Route::rule('google/qrcode$', 'base/captcha_url');            // 二维码地址
 Route::rule('google/secret$', 'base/generate_code');          // Google密钥
 
 
-// ====================
-// 其他功能
-// ====================
-Route::rule('index/statistics$', 'Index/statistics');                   // 统计
+// ====================================================================
+// 公司收款账户管理模块
+// ====================================================================
+Route::rule('zhanghu/list$', '/log.ZhangHu/list');                             // 收款账户列表
+Route::rule('zhanghu/detail$', '/log.ZhangHu/detail');                         // 收款账户详情
+Route::rule('zhanghu/add$', '/log.ZhangHu/add');                               // 添加收款账户
+Route::rule('zhanghu/edit$', '/log.ZhangHu/edit');                             // 编辑收款账户
+Route::rule('zhanghu/del$', '/log.ZhangHu/del');                               // 删除收款账户
+Route::rule('zhanghu/status$', '/log.ZhangHu/status');                         // 切换账户状态
+Route::rule('zhanghu/batch_status$', '/log.ZhangHu/batchStatus');              // 批量操作状态
+Route::rule('zhanghu/statistics$', '/log.ZhangHu/statistics');                 // 获取统计数据
+Route::rule('zhanghu/export$', '/log.ZhangHu/export');                         // 导出账户列表
+Route::rule('zhanghu/payment_methods$', '/log.ZhangHu/paymentMethods');        // 获取支付方式配置
+Route::rule('zhanghu/update_usage$', '/log.ZhangHu/updateUsage');              // 更新使用统计
 
-
+// ====================================================================
+// 通知消息模块
+// ====================================================================
+Route::rule('api/notification/latest-records$', 'log.TongZhi/getLatestRecords');    // 获取最新记录
+Route::rule('api/notification/latest-recharges$', 'log.TongZhi/getLatestRecharges'); // 获取最新充值
+Route::rule('api/notification/latest-withdraws$', 'log.TongZhi/getLatestWithdraws'); // 获取最新提现
+Route::rule('api/notification/mark-read$', 'log.TongZhi/markNotificationsRead');     // 标记已读
+Route::rule('api/notification/test$', 'log.TongZhi/test');                           // 测试接口
+Route::rule('api/notification/trigger$', 'log.TongZhi/triggerNotification');        // 触发通知
