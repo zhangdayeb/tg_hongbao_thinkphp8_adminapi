@@ -40,7 +40,7 @@ class User extends Base
         isset($post['phone']) && $map[] = ['b.phone', '=', $post['phone']];
         isset($post['id']) && $map[] = ['b.id', '=', $post['id']];
         isset($post['invitation_code']) && $map[] = ['b.invitation_code', '=', $post['invitation_code']];
-        isset($post['market_uid']) && $map [] = ['b.market_uid', '=',$post['market_uid']];
+
 
         if (isset($post['start']) && isset($post['end'])) {
             $date['start'] = $post['start'];

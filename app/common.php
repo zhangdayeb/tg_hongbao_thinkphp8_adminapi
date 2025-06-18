@@ -718,7 +718,7 @@ function userzm($length, $needAlpha = true)
 
     
     function getTrueName($uid){
-        $r = (new UserRealName)->where('user_id',$uid)->value('true_name');
+        $r = (new UserRealName)->where('user_id',$uid)->value('name');
         return $r?$r:'未实名';
     }
 

@@ -55,7 +55,7 @@ class TongZhi extends Base
                 ->where('log.type', 1) // 收入
                 ->where('log.status', 101) // 充值
                 ->where('log.create_time', '>', date('Y-m-d H:i:s', $lastCheckTimestamp))
-                ->field('log.id, log.create_time, log.money, log.uid, user.user_name, user.nickname')
+                ->field('log.id, log.create_time, log.money, log.uid, user.user_name')
                 ->order('log.create_time desc')
                 ->limit($limit)
                 ->select();
@@ -65,7 +65,7 @@ class TongZhi extends Base
                 ->alias('withdraw')  // 改为更明确的别名
                 ->leftJoin('ntp_common_user user', 'withdraw.user_id = user.id')  // 使用明确的别名
                 ->where('withdraw.create_time', '>', date('Y-m-d H:i:s', $lastCheckTimestamp))
-                ->field('withdraw.id, withdraw.create_time, withdraw.money, withdraw.user_id as uid, user.user_name, user.nickname')
+                ->field('withdraw.id, withdraw.create_time, withdraw.money, withdraw.user_id as uid, user.user_name')
                 ->order('withdraw.create_time desc')
                 ->limit($limit)
                 ->select();
