@@ -92,13 +92,13 @@ class TGAD extends Base
                 'title' => $item['title'],
                 'content' => $item['content'],
                 'image_url' => $item['image_url'],
-                'send_mode' => $this->getSendModeText($item['send_mode']),
-                'send_mode_value' => $item['send_mode'],
+                'send_mode_text' => $this->getSendModeText($item['send_mode']),
+                'send_mode' => $item['send_mode'],
                 'send_time' => $item['send_time'],
                 'daily_times' => $item['daily_times'],
                 'interval_minutes' => $item['interval_minutes'],
-                'status' => $this->getStatusText($item['status']),
-                'status_value' => $item['status'],
+                'status_text' => $this->getStatusText($item['status']),
+                'status' => $item['status'],
                 'total_sent_count' => $item['total_sent_count'],
                 'success_count' => $item['success_count'],
                 'failed_count' => $item['failed_count'],
@@ -173,13 +173,13 @@ class TGAD extends Base
             'title' => $advertisement['title'],
             'content' => $advertisement['content'],
             'image_url' => $advertisement['image_url'],
-            'send_mode' => $this->getSendModeText($advertisement['send_mode']),
-            'send_mode_value' => $advertisement['send_mode'],
+            'send_mode_text' => $this->getSendModeText($advertisement['send_mode']),
+            'send_mode' => $advertisement['send_mode'],
             'send_time' => $advertisement['send_time'],
             'daily_times' => $advertisement['daily_times'],
             'interval_minutes' => $advertisement['interval_minutes'],
-            'status' => $this->getStatusText($advertisement['status']),
-            'status_value' => $advertisement['status'],
+            'status_text' => $this->getStatusText($advertisement['status']),
+            'status' => $advertisement['status'],
             'total_sent_count' => $advertisement['total_sent_count'],
             'success_count' => $advertisement['success_count'],
             'failed_count' => $advertisement['failed_count'],
@@ -681,9 +681,9 @@ class TGAD extends Base
     private function getSendModeText($mode)
     {
         $modes = [
-            1 => 'immediate',
-            2 => 'scheduled', 
-            3 => 'recurring'
+            1 => '定时发送',
+            2 => '每日定时', 
+            3 => '循环发送'
         ];
         
         return $modes[$mode] ?? 'unknown';
@@ -695,10 +695,10 @@ class TGAD extends Base
     private function getStatusText($status)
     {
         $statuses = [
-            0 => 'draft',
-            1 => 'active',
-            2 => 'completed',
-            3 => 'cancelled'
+            0 => '草稿',
+            1 => '激活',
+            2 => '完成',
+            3 => '取消'
         ];
         
         return $statuses[$status] ?? 'unknown';
