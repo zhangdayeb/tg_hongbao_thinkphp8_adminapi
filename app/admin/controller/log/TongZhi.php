@@ -61,11 +61,11 @@ class TongZhi extends Base
                 ->select();
             
             // 查询最新的提现记录（从提现表）
-            $withdrawRecords = Db::table('ntp_common_pay_cash')
+            $withdrawRecords = Db::table('ntp_common_pay_withdraw')
                 ->alias('cash')
-                ->leftJoin('ntp_common_user user', 'cash.u_id = user.id')
+                ->leftJoin('ntp_common_user user', 'cash.user_id = user.id')
                 ->where('cash.create_time', '>', date('Y-m-d H:i:s', $lastCheckTimestamp))
-                ->field('cash.id, cash.create_time, cash.money, cash.u_id as uid, user.user_name, user.nickname')
+                ->field('cash.id, cash.create_time, cash.money, cash.user_id as uid, user.user_name, user.nickname')
                 ->order('cash.create_time desc')
                 ->limit($limit)
                 ->select();

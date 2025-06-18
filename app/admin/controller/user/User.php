@@ -7,7 +7,7 @@ use app\admin\controller\Base;
 use app\common\model\AdminModel;
 use app\common\model\AgentLavel;
 use app\common\model\MoneyLog;
-use app\common\model\UserModel as models;
+use app\common\model\User as models;
 use app\common\model\UserSet;
 use app\common\traites\PublicCrudTrait;
 use app\common\validate\User as validates;
@@ -26,6 +26,7 @@ class User extends Base
     }
 
     //获取列表信息
+    //获取列表信息
     public function index()
     {
         //当前页
@@ -35,31 +36,18 @@ class User extends Base
         //查询搜索条件
         $post = array_filter($this->request->post());
         $map = $date = [];
-        isset($post['user_name']) && $map [] = ['a.user_name', 'like', '%' . $post['user_name'] . '%'];
-        isset($post['phone']) && $map[] = ['a.phone', '=', $post['phone']];
-        isset($post['market_uid']) && $map [] = ['b.user_name', 'like', '%' . $post['market_uid'] . '%'];
-        if (isset($post['is_fictitious']) && empty(session('admin_user.agent'))){
-            if ($post['is_fictitious'] == 3){
-                $map [] = ['a.is_fictitious', '=', 0];
-            } else{
-                $map [] = ['a.is_fictitious', '=', $post['is_fictitious']];
-            }
-        }
-        $map [] = ['a.type', '=', $post['type']];
-        //代理查询存在是，清除其他查询只保留代理查询
-        isset($post['agent_name']) && $map ['agent_name'] = $post['agent_name'];
-        isset($post['start']) && $date['start'] = $post['start'];
-        isset($post['end']) && $date['end'] = $post['end'];
-        if ($this->request->admin_user->agent == 1){
-                if(isset($post['is_fictitious']) && $post['is_fictitious'] == 3){
-                    $map[]=['a.id','in',$this->request->admin_user->user_list];
-                }else{
-                    $map[]=['a.id','in',$this->request->admin_user->agent_list];
-                }
-        }
-      
-        $list = $this->model->page_list($map, $limit, $page, $date);
+        isset($post['user_name']) && $map [] = ['b.user_name', 'like', '%' . $post['user_name'] . '%'];
+        isset($post['phone']) && $map[] = ['b.phone', '=', $post['phone']];
+        isset($post['id']) && $map[] = ['b.id', '=', $post['id']];
+        isset($post['invitation_code']) && $map[] = ['b.invitation_code', '=', $post['invitation_code']];
+        isset($post['market_uid']) && $map [] = ['b.market_uid', '=',$post['market_uid']];
 
+        if (isset($post['start']) && isset($post['end'])) {
+            $date['start'] = $post['start'];
+            $date['end'] = $post['end'];
+        }
+
+        $list = $this->model->page_list($map, $limit, $page, $date);
         return $this->success($list);
     }
 

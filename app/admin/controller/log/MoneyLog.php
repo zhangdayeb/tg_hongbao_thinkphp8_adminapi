@@ -6,7 +6,7 @@ namespace app\admin\controller\log;
 
 use app\admin\controller\Base;
 use app\common\model\MoneyLog as models;
-use app\common\model\UserModel;
+use app\common\model\User;
 
 class MoneyLog extends Base
 {
@@ -43,7 +43,7 @@ class MoneyLog extends Base
 
         $status_where_user = [];
         if (isset($post['user_name'])) {//查询指定用户的
-            $user_find = UserModel::where('user_name|nickname', $post['user_name'])->find();
+            $user_find = User::where('user_name|nickname', $post['user_name'])->find();
             if (empty($user_find)) $this->failed('用户不存在');
             if (!in_array($user_find->id, $this->request->admin_user['direct_list'])) $this->failed('没权限查看该用户');  //没权限查看该用户
             $status_where_user[] = $map[] = ['uid', '=', $user_find->id];
