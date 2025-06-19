@@ -86,7 +86,7 @@ class User extends Base
     public function add()
     {
         //过滤数据
-        $postField = 'remarks,xima_lv,phone,market_uid,user_name,money_balance,money_freeze,agent_rate,pwd,withdraw_pwd,nickname,type,status,is_real_name,is_fictitious,id_code';
+        $postField = 'remarks,xima_lv,phone,market_uid,user_name,money_balance,money_freeze,agent_rate,pwd,withdraw_pwd,type,status,is_real_name,is_fictitious,id_code';
         $post = $this->request->only(explode(',', $postField), 'post', null);
 
         try {
@@ -153,7 +153,7 @@ class User extends Base
     public function edit()
     {
         //过滤数据
-        $postField = 'remarks,xima_lv,phone,market_uid,user_name,money_balance,money_freeze,agent_rate,pwd,withdraw_pwd,nickname,type,status,is_real_name,is_fictitious,id';
+        $postField = 'remarks,xima_lv,phone,market_uid,user_name,money_balance,money_freeze,agent_rate,pwd,withdraw_pwd,type,status,is_real_name,is_fictitious,id';
         $post = $this->request->only(explode(',', $postField), 'post', null);
         //验证数据
         try {

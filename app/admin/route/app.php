@@ -95,7 +95,7 @@ Route::rule('money/log$', 'log.MoneyLog/index');               // 资金流动�
 Route::rule('withdraw/list$', 'log.PayWithdraw/index');             // 提现列表日志
 Route::rule('withdraw/pass$', 'log.PayWithdraw/pass');              // 提现通过
 Route::rule('withdraw/refuse$', 'log.PayWithdraw/refuse');          // 提现拒绝
-Route::rule('withdraw/statistics$', 'log.PayWithdraw/statistics');     // 修改金额
+Route::rule('withdraw/statistics$', 'log.PayWithdraw/statistics');     // 统计
 
 // ====================
 // 充值管理
@@ -103,7 +103,7 @@ Route::rule('withdraw/statistics$', 'log.PayWithdraw/statistics');     // 修改
 Route::rule('recharge/list$', 'log.PayRecharge/index');        // 充值列表日志
 Route::rule('recharge/pass$', 'log.PayRecharge/pass');         // 充值通过
 Route::rule('recharge/refuse$', 'log.PayRecharge/refuse');     // 充值拒绝
-Route::rule('recharge/statistics$', 'log.PayRecharge/statistics');     // 修改金额
+Route::rule('recharge/statistics$', 'log.PayRecharge/statistics');     // 统计
 
 
 // ====================================================================

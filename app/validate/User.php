@@ -17,7 +17,6 @@ class User extends Validate
         'user_name' => 'require|max:200',
         'pwd' => 'alphaNum',
         'withdraw_pwd' => 'integer',
-        'nickname' => 'max:200',
         'type' => 'integer',
         'status' => 'integer',
         'is_real_name' => 'integer',
@@ -27,7 +26,6 @@ class User extends Validate
         'agent_rate' => 'float',
         'money_freeze' => 'require|float',
         'invitation_code' => 'alphaNum|max:200',
-//        'admin'=>'integer',
         'market_uid'=>'require',
         'state'=>'require|integer',
         'change_money'=>'require|integer',
@@ -44,13 +42,9 @@ class User extends Validate
      * @var array
      */
     protected $message = [
-        //'user_name.require' => '名称必填',
         'user_name.max' => '名称最多不能超过200个字符',
-        //'pwd.require' => '密码必填',
-        //'pwd.require' => '密码必填',
         'pwd.alphaNum' => '密码必须是字母和数字',
         'withdraw_pwd.integer' => '提现密码必须是数字',
-        'nickname.max' => '昵称最多不能超过200个字符',
         'type.integer' => '类型必须是数字',
         'status.integer' => '状态必须是数字',
         'is_real_name.integer' => '实名必须是数字',
@@ -70,8 +64,8 @@ class User extends Validate
      * @var \string[][]
      */
     protected $scene = [
-        'edit' => ['admin','user_name','agent_rate', 'pwd', 'withdraw_pwd', 'nickname', 'type', 'status','is_real_name','is_fictitious','id','invitation_code','presenter_day'],
-        'add' => ['admin','user_name','agent_rate', 'pwd', 'withdraw_pwd', 'nickname', 'type', 'status','is_real_name','is_fictitious','invitation_code', 'presenter_day'],
+        'edit' => ['admin','user_name','agent_rate', 'pwd', 'withdraw_pwd', 'type', 'status','is_real_name','is_fictitious','id','invitation_code','presenter_day'],
+        'add' => ['admin','user_name','agent_rate', 'pwd', 'withdraw_pwd', 'type', 'status','is_real_name','is_fictitious','invitation_code', 'presenter_day'],
         'detail' => ['id'],
         'status'=> ['id','status'],
         'money'=>['uid','change_money','money_ststus','money_change_type'],
