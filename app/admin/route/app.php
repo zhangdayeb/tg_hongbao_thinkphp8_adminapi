@@ -92,19 +92,18 @@ Route::rule('money/log$', 'log.MoneyLog/index');               // 资金流动�
 // ====================
 // 提现管理
 // ====================
-Route::rule('pay/list$', 'log.PayWithdraw/index');             // 提现列表日志
-Route::rule('pay/pass$', 'log.PayWithdraw/pass');              // 提现通过
-Route::rule('pay/refuse$', 'log.PayWithdraw/refuse');          // 提现拒绝
-Route::rule('pay/is_line$', 'log.PayWithdraw/is_line');        // 线上线下
-Route::rule('pay/amount$', 'log.PayWithdraw/amount_edit');     // 修改金额
+Route::rule('withdraw/list$', 'log.PayWithdraw/index');             // 提现列表日志
+Route::rule('withdraw/pass$', 'log.PayWithdraw/pass');              // 提现通过
+Route::rule('withdraw/refuse$', 'log.PayWithdraw/refuse');          // 提现拒绝
+Route::rule('withdraw/statistics$', 'log.PayWithdraw/statistics');     // 修改金额
 
 // ====================
 // 充值管理
 // ====================
 Route::rule('recharge/list$', 'log.PayRecharge/index');        // 充值列表日志
-Route::rule('recharge/status$', 'log.PayRecharge/status');     // 确认充值
 Route::rule('recharge/pass$', 'log.PayRecharge/pass');         // 充值通过
 Route::rule('recharge/refuse$', 'log.PayRecharge/refuse');     // 充值拒绝
+Route::rule('recharge/statistics$', 'log.PayRecharge/statistics');     // 修改金额
 
 
 // ====================================================================

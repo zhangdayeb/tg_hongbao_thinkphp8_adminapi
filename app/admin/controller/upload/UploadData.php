@@ -39,7 +39,7 @@ class UploadData extends BaseController
 
         // 构建访问URL - 二维码文件会保存在storage/qrcode/目录下
         $baseUrl = config('ToConfig.app_update.image_url', 'https://authapi.wuming888.com/');
-        $fileUrl = $baseUrl . 'storage/' . $savename[0];
+        $fileUrl = $baseUrl . '/' . $savename[0];
 
         return json([
             'code' => 1,

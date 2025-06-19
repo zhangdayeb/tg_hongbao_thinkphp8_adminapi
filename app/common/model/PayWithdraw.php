@@ -34,9 +34,7 @@ class PayWithdraw extends Model
             ->where($map)
             ->join('common_user b', 'a.user_id = b.id', 'left')
             ->join('common_admin c', 'a.admin_uid = c.id', 'left')
-//            ->join('common_admin d', 'a.market_uid = d.id', 'left')
-            // ->join('common_admin d', 'a.agent_uid = d.id', 'left')
-            ->field('a.*,b.user_name,c.user_name admin_name,d.user_name as agent_name,d.id as agent_id')
+            ->field('a.*,b.user_name,c.user_name admin_name')
             ->order('id desc')
             ->paginate(['list_rows' => $limit, 'page' => $page], false)->each(function ($item, $key) {
                 $status = '';

@@ -17,7 +17,6 @@ class Role
     {
         $admin = session('admin_user');
         //权限验证
-        //if (empty($admin)) return $next($request);
         //查询当前用户角色是否为禁用
         $role = AdminRole::where('id', $admin['role'])->find();
         if (empty($role)) return $this->failed('该角色没分配权限');

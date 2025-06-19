@@ -131,6 +131,7 @@ class ZhangHu extends Base
                 return json(['code' => 0, 'message' => '账户已存在']);
             }
 
+
             $data['created_at'] = date('Y-m-d H:i:s');
             $data['updated_at'] = date('Y-m-d H:i:s');
 
@@ -468,8 +469,9 @@ class ZhangHu extends Base
 
         $data['is_active'] = (int)$this->request->post('isActive', 1);
         $data['daily_limit'] = $this->request->post('dailyLimit', 0);
-        $data['balance_limit'] = $this->request->post('balanceLimit', null);
+        $data['balance_limit'] = $this->request->post('balanceLimit', 9999999);
         $data['remark'] = $this->request->post('remark', '');
+        $data['qr_code_url'] = $this->request->post('qrCodeUrl', '');
 
         // 根据支付方式验证特定字段
         $methodCode = $data['method_code'];
@@ -488,7 +490,6 @@ class ZhangHu extends Base
                 $data['phone_number'] = null;
                 $data['wallet_address'] = null;
                 $data['network_type'] = null;
-                $data['qr_code_url'] = null;
                 break;
 
             case 'huiwang':
@@ -504,13 +505,11 @@ class ZhangHu extends Base
                 $data['bank_name'] = null;
                 $data['wallet_address'] = null;
                 $data['network_type'] = null;
-                $data['qr_code_url'] = null;
                 break;
 
             case 'usdt':
                 $data['wallet_address'] = $this->request->post('walletAddress', '');
                 $data['network_type'] = $this->request->post('networkType', '');
-                $data['qr_code_url'] = $this->request->post('qrCodeUrl', '');
                 if (empty($data['wallet_address'])) {
                     return ['error' => '请输入钱包地址'];
                 }
