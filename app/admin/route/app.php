@@ -213,3 +213,10 @@ Route::rule('telegram/advertisement/create', 'telegram.TGAD/createAdvertisement'
 Route::rule('telegram/advertisement/update', 'telegram.TGAD/updateAdvertisement', 'POST');// 更新广告
 Route::rule('telegram/advertisement/delete', 'telegram.TGAD/deleteAdvertisement', 'POST');// 删除广告
 
+
+// ====================
+// Telegram机器人配置管理
+// ====================
+Route::rule('telegram/bot/config$', 'telegram.TGConfig/getConfig', 'POST');        // 获取机器人配置
+Route::rule('telegram/bot/config/update$', 'telegram.TGConfig/updateConfig', 'POST'); // 更新机器人配置
+
